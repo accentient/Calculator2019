@@ -9,7 +9,7 @@ namespace Fabrikam.Appium
   public class CalculatorSession
   {
     protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
-    private const string CalculatorAppId = @"calculator.exe";
+    private static string CalculatorAppId;
 
     protected static WindowsDriver<WindowsElement> session;
     protected static WindowsElement display, key_clear, key_1, key_2, key_plus, key_minus, key_times, key_dividedBy, key_equals;
@@ -19,6 +19,14 @@ namespace Fabrikam.Appium
       // Launch a new instance of Calculator application
       if (session == null)
       {
+        // Determine AssemblyPath
+
+        string codeBase = System.Reflection.Assembly.GetExecutingAssembly().CodeBase;
+        UriBuilder uri = new UriBuilder(codeBase);
+        string path = Uri.UnescapeDataString(uri.Path);
+        string assemblyPath = System.IO.Path.GetDirectoryName(path);
+        CalculatorAppId = assemblyPath + @"\" + "calculator.exe";
+
         // Create a new session to launch Calculator application
         DesiredCapabilities appCapabilities = new DesiredCapabilities();
         appCapabilities.SetCapability("app", CalculatorAppId);
